@@ -1,10 +1,45 @@
-#Calculate Team 2's target score
-team2_target = function(team1_score, team1_par, team1_resources, team2_resources){
-  return((team1_score + team1_par*(team2_resources/team1_resources))) 
+dls=read.csv("DuckworthLewisStern.csv",sep=",")
+r1=1
+r2=1
+ch=1
+inn=1
+while(inn<=2){
+  while(r1>0 && r2>0 && ( ch==1 || ch==2)){
+    cat("1.Interruption \n2.Restart \n3.Get Target \n")
+    ch=as.integer(readline(prompt="Enter your choice"))
+    if(ch==1){
+      overs_lost=as.integer(readline(prompt="Enter overs left"))
+      wickets_lost=as.integer(readline(prompt="Enter wickets lost"))
+      overs=50-overs_lost;
+      if(inn==1){
+        r1=r1-dls[overs_lost][wickets_lost]
+      }
+      else{
+        r2=r2-dls[overs_lost][wickets_lost]
+      }
+    }
+    if(ch==2){
+      overs_gained=as.integer(readline(prompt="Enter overs gained"))
+      wickets_lost=as.integer(readline(prompt="Enter wickets lost"))
+      overs=50+overs_gained;
+      if(inn==1){
+        r1=r1+dls[overs_gained][wickets_lost]
+      }
+      else{
+        r2=r2+dls[overs_lost][wickets_lost]
+      }
+    }
+    if(ch==3){
+      if(inn==1){
+        score=as.integer(readline(prompt="Enter Score of team 1"))
+        r2=dls[overs][10]
+        target=score+245*r2-r1/100
+        inn=inn+1
+      }
+      else{
+        target=score*r2/r1
+        inn=inn+1
+      }
+    }
+  }
 }
-
-## team2_target = the final output score Team 2 requires to Win the match, taking all interruptions into account.
-## team1_score = (a.k.a G50) the runs that the team batting first scores (this variable is useful if Team 1's innings is interrupted, otherwise 'team1_score' = 0).
-## team1_par = the runs on average scored by the team batting first at that venue. We use this variable in place of 'team1_score'. if their innings does not get interrupted.
-## team1_resources = this uses the DLS table to evaluate the resources remaining between when they started, and at the close of interruption for Team 1.
-## team2_resources = this uses the DLS table to evaluate the resources remaining between when they started, and at the close of interruption for Team 2.
